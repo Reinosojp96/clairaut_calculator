@@ -195,23 +195,44 @@ class ClairautEngine:
         """Genera una lista de pasos texto para explicar el cálculo."""
         steps = []
 
-        steps.append(f"f(p) = {self.sym_utils.format_expression(self.f_p)}")
-        steps.append(f"f'(p) = {self.sym_utils.format_expression(self.f_prime)}")
-        steps.append("Solución general: y = C·x + f(C)")
+        f_str = self.sym_utils.format_expression(self.f_p)
+
+        # Paso 1: Función ingresada
+        steps.append(f"[Paso 1] Función ingresada: f(p) = {f_str}")
+
+        # Paso 2: Ecuación diferencial de Clairaut
+        steps.append(f"[Paso 2] Ecuación de Clairaut: y = x·y' + f(y')")
+
+        # Paso 3: Reescritura usando p = y'
+        steps.append(f"[Paso 3] Usando p = y', la ecuación se reescribe como:")
+        steps.append(f"         y = x·p + f(p)  →  y = x·p + {f_str}")
+
+        # Paso 4: Solución general
+        steps.append(f"[Paso 4] Solución general (tomando p = C):")
         steps.append(
-            f"Reemplazando C en f(p), la solución general es: y = {self.sym_utils.format_expression(self.general_solution)}"
+            f"         y = C·x + f(C)  →  y = {self.sym_utils.format_expression(self.general_solution)}"
         )
 
+        # Paso 5: Derivada f'(p)
+        steps.append(
+            f"[Paso 5] Derivada: f'(p) = {self.sym_utils.format_expression(self.f_prime)}"
+        )
+
+        # Pasos 6-9: Solución singular
         if self.singular_solution is not None:
-            steps.append("Condición singular: x + f'(p) = 0")
+            steps.append(f"[Paso 6] Condición para solución singular: x + f'(p) = 0")
             steps.append(
-                f"Resolviendo para p, se obtiene: p = {self.sym_utils.format_expression(self.singular_p_expr)}"
+                f"[Paso 7] Despejando p:  p = {self.sym_utils.format_expression(self.singular_p_expr)}"
             )
             steps.append(
-                f"Solución singular: y = {self.sym_utils.format_expression(self.singular_solution)}"
+                f"[Paso 8] Sustituyendo p en y = x·p + f(p):"
+            )
+            steps.append(
+                f"[Paso 9] Solución singular: y = {self.sym_utils.format_expression(self.singular_solution)}"
             )
         else:
-            steps.append("No hay solución singular explícita para esta función.")
+            steps.append("[Paso 6] Condición para solución singular: x + f'(p) = 0")
+            steps.append("[Paso 7-9] No es posible despejar p explícitamente → no hay solución singular.")
 
         return steps
 

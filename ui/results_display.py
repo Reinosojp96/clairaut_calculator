@@ -38,6 +38,7 @@ class ResultsDisplay(QWidget):
         self.scroll_area.setWidget(self.scroll_content)
 
         # Crear grupos de resultados
+        self._create_equation_group()
         self._create_function_group()
         self._create_general_solution_group()
         self._create_singular_solution_group()
@@ -49,6 +50,61 @@ class ResultsDisplay(QWidget):
         # Inicializar con valores vacíos
         self.clear()
         
+    def _create_equation_group(self):
+        """Crea el grupo que muestra la ecuación de Clairaut y la notación p = y'"""
+        self.equation_group = QGroupBox("Ecuación diferencial de Clairaut")
+        self.equation_group.setFont(QFont("Arial", 10, QFont.Weight.Bold))
+
+        layout = QVBoxLayout()
+
+        # Ecuación original con y'
+        self.eq_original_label = QLabel("y = x·y' + f(y')")
+        self.eq_original_label.setFont(QFont("Arial", 11))
+        self.eq_original_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.eq_original_label.setStyleSheet("color: #333; padding: 4px;")
+        self.eq_original_label.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+        )
+
+        # Separador
+        sep = QFrame()
+        sep.setFrameShape(QFrame.Shape.HLine)
+        sep.setFrameShadow(QFrame.Shadow.Sunken)
+
+        # Nota de notación
+        notation_note = QLabel("Usando la notación  p = y'  la ecuación se reescribe como:")
+        notation_note.setFont(QFont("Arial", 9))
+        notation_note.setStyleSheet("color: #555; font-style: italic;")
+        notation_note.setWordWrap(True)
+
+        # Ecuación reescrita con p
+        self.eq_p_label = QLabel("y = x·p + f(p)")
+        self.eq_p_label.setFont(QFont("Arial", 11))
+        self.eq_p_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.eq_p_label.setStyleSheet("color: #1a6fbf; padding: 4px; font-weight: bold;")
+        self.eq_p_label.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+        )
+
+        # Ecuación con f(p) sustituida (se actualiza al ingresar función)
+        self.eq_substituted_label = QLabel("")
+        self.eq_substituted_label.setFont(QFont("Arial", 10))
+        self.eq_substituted_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.eq_substituted_label.setStyleSheet("color: #1a6fbf; padding: 2px;")
+        self.eq_substituted_label.setWordWrap(True)
+        self.eq_substituted_label.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+        )
+
+        layout.addWidget(self.eq_original_label)
+        layout.addWidget(sep)
+        layout.addWidget(notation_note)
+        layout.addWidget(self.eq_p_label)
+        layout.addWidget(self.eq_substituted_label)
+
+        self.equation_group.setLayout(layout)
+        self.scroll_layout.addWidget(self.equation_group)
+
     def _create_function_group(self):
         """Crea el grupo para f(p) y f'(p)"""
         self.function_group = QGroupBox("Función y derivada")
@@ -154,7 +210,13 @@ class ResultsDisplay(QWidget):
         # f(p) y f'(p)
         f_p = results.get('f_p', 'No disponible')
         f_prime = results.get('f_prime', 'No disponible')
-        
+
+        # Actualizar ecuación sustituida en el grupo superior
+        if f_p and f_p != 'No disponible':
+            self.eq_substituted_label.setText(f"→  y = x·p + ({self._format_expression(f_p)})")
+        else:
+            self.eq_substituted_label.setText("")
+
         self.f_p_label.setText(f"f(p) = {self._format_expression(f_p)}")
         self.f_prime_label.setText(f"f'(p) = {self._format_expression(f_prime)}")
         
@@ -208,6 +270,7 @@ class ResultsDisplay(QWidget):
         
     def clear(self):
         """Limpia todos los campos (sin poner Calculando...)"""
+        self.eq_substituted_label.setText("")
         self.f_p_label.setText("f(p) = ")
         self.f_prime_label.setText("f'(p) = ")
         self.general_label.setText("y = ")
