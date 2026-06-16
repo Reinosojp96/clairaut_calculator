@@ -66,14 +66,6 @@ class DependencyContainer:
         self._plotting_utils = None  # Se recreará automáticamente con el nuevo engine
         error_handler.info("DependencyContainer", "Motor reiniciado para nueva función")
 
-    def get_all_dependencies(self) -> dict:
-        """Retorna todas las dependencias como diccionario (útil para debugging)"""
-        return {
-            'engine': self.engine,
-            'plotting_utils': self.plotting_utils,
-            'validator': self.validator
-        }
-
 
 # Instancia global única
 container = DependencyContainer()

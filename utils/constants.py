@@ -9,8 +9,7 @@ X_MIN = -5.0
 X_MAX = 5.0
 NUM_POINTS = 400
 
-# Rango de y para la gráfica
-Y_MIN_AUTO = True
+# Rango de y para la gráfica (fallback si los límites calculados son infinitos)
 Y_MANUAL_MIN = -10.0
 Y_MANUAL_MAX = 10.0
 

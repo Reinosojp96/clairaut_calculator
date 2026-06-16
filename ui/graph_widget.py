@@ -1,6 +1,7 @@
 # ui/graph_widget.py
 # Widget para visualización de gráficas con matplotlib embebido
 
+import matplotlib.pyplot as plt
 import numpy as np
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -10,7 +11,7 @@ from utils.constants import (
     X_LABEL, Y_LABEL, APP_TITLE,
     DEFAULT_LINEWIDTH, SINGULAR_LINEWIDTH, SINGULAR_COLOR,
     GENERAL_LINESTYLE, GENERAL_COLORMAP,
-    X_MIN, X_MAX, Y_MANUAL_MIN, Y_MANUAL_MAX, Y_MIN_AUTO
+    X_MIN, X_MAX, Y_MANUAL_MIN, Y_MANUAL_MAX
 )
 
 
@@ -181,8 +182,6 @@ class GraphWidget(QWidget):
             y_min = max(y_min, -50) if not np.isinf(y_min) else Y_MANUAL_MIN
             y_max = min(y_max, 50) if not np.isinf(y_max) else Y_MANUAL_MAX
             self.ax.set_ylim(y_min, y_max)
-        elif not Y_MIN_AUTO:
-            self.ax.set_ylim(Y_MANUAL_MIN, Y_MANUAL_MAX)
         # Si es automático, matplotlib ajusta automáticamente
         
         self.canvas.draw_idle()
@@ -206,27 +205,3 @@ class GraphWidget(QWidget):
             if legend:
                 legend.remove()
                 
-    def set_title(self, title: str):
-        """Cambia el título del gráfico"""
-        self.ax.set_title(title, fontsize=14, fontweight='bold')
-        self.canvas.draw_idle()
-        
-    def set_x_limits(self, x_min: float, x_max: float):
-        """Ajusta los límites del eje X"""
-        self.ax.set_xlim(x_min, x_max)
-        self.canvas.draw_idle()
-        
-    def save_figure(self, filename: str):
-        """Guarda la figura actual como imagen"""
-        self.figure.savefig(filename, dpi=150, bbox_inches='tight')
-        
-    def get_current_limits(self) -> dict:
-        """Obtiene los límites actuales de los ejes"""
-        x_lim = self.ax.get_xlim()
-        y_lim = self.ax.get_ylim()
-        return {'x_min': x_lim[0], 'x_max': x_lim[1], 
-                'y_min': y_lim[0], 'y_max': y_lim[1]}
-
-
-# Importar matplotlib.pyplot para el colormap
-import matplotlib.pyplot as plt

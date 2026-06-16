@@ -263,7 +263,3 @@ class ClairautEngine:
         self.singular_solution = None
         self.singular_p_expr = None
         error_handler.info("ClairautEngine", "Motor limpiado")
-
-
-# Instancia global
-clairaut_engine = ClairautEngine()

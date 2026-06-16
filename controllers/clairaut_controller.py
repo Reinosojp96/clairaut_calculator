@@ -147,30 +147,6 @@ class ClairautController(QObject):
             self.processing_finished.emit()
             return None
 
-    def get_general_solution_for_display(self) -> str:
-        """Retorna la solución general formateada para mostrar"""
-        if self.current_results:
-            return self.current_results.get('general', 'No disponible')
-        return 'No hay función cargada'
-
-    def get_singular_solution_for_display(self) -> str:
-        """Retorna la solución singular formateada para mostrar"""
-        if self.current_results:
-            return self.current_results.get('singular', 'No disponible')
-        return 'No hay función cargada'
-
-    def get_f_prime_for_display(self) -> str:
-        """Retorna f'(p) formateada para mostrar"""
-        if self.current_results:
-            return self.current_results.get('f_prime', 'No disponible')
-        return 'No hay función cargada'
-
-    def get_singular_condition_for_display(self) -> str:
-        """Retorna la condición singular formateada para mostrar"""
-        if self.current_results:
-            return self.current_results.get('singular_condition', 'No disponible')
-        return 'No hay función cargada'
-
     def clear(self):
         """Limpia el estado actual del controlador"""
         self.current_f_expr = None

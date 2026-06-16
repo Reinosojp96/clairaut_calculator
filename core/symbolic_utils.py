@@ -199,7 +199,3 @@ class SymbolicUtils:
             return expr_str
         except Exception:
             return ""
-
-
-# Instancia global
-symbolic_utils = SymbolicUtils()
